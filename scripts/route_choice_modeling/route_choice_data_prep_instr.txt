@@ -1,0 +1,86 @@
+Route Choice Data Preparation Instructions
+
+1. Trip selection
+	a) Generate stop and travel files to feed into trip generation.
+    First create the output directory: `mkdir -p /tmp/cargo_stops/`
+    Run the script: cargo_stops.sql with `mysql -uroot fmsurvey < cargo_stops.sql` (password required)
+ 	  This generates the travel data as well as pick up, delivery and other relevant stops in the /tmp/cargo_stops/ directory.
+ 	  For hpv ura data from singapore, since the database server restricts write access, the process is slightly different:
+ 	  From an IP that has access to this database, execute the following script
+    `mkdir sg/`
+ 	  `mysql -ureader -h fms-freight-sg-db.ccd9kkcwzpox.ap-southeast-1.rds.amazonaws.com -p fmsensing_freight_sg < delivery_stops_sg.sql\
+    | sed 's/\t/","/g' | sed 's/\r/"\r"/g' > sg/delivey_stops.csv`
+ 	  Replace delivery_stops_sg.sql with: other_stops_sg.sql, pick_up_cargo_stops_sg.sql, gen_travels_sg.sql
+ 	  After this, you should have all 4 files: sg/delivey_stops.csv, sg/other_stops.csv, sg/pick_up_cargo_stops.csv, sg/gen_travels.csv
+
+	b) Next we generate trips matching our criteria. For boston data, just run `./gen_trips.py`
+ 	  This generates the file cargo_trips_bos.csv with the following fields:
+
+ 	  user_id, id, origin_id, destination_id, start_time, end_time, origin_lat, origin_lon, destination_lat, destination_lon, 
+    trip_distance, duration_without_stops, duration_with_stops, waypoints, num_intermediate_stops, min_intermediate_stop_duration, 
+    max_intermediate_stop_duration, avg_intermediate_stop_duration
+
+ 	  Do the same for singapore data by editing the variables 'outfile' and 'base_dir' as required. (See comments in script)
+ 	  To modify the trip selection criteria, edit the function 'get_corresponding_delivery()'. 
+ 	  After running this script, stats on the number of trips matching or not-matching each criteria are printed.
+ 	  Note that the trip id is an integer generated from a unique and invertible combination of the ids for origin and destination stops 
+    (origin_id and destination_id) for a trip. The function 'cantor_inverse(trip_id)' can be used to find the original ids in future analysis. 
+
+2. Map-matching trips to OSM:
+ 	 - Boston: Map-matching appears to have completed successfully for all trips.
+   To re-run, execute the script: original_trips_map_matching.sh
+ 	 - Singapore: progress unclear
+
+3. Choice set generation for each trip
+ 	a) Generate alternative routes from different services (google, bing, mapquest)
+ 	  Execute the scripts 'google_service.js', 'bing_service.js' and 'map_quest_service.js' to query their respective APIs for alternate routes:
+	  e.g.: `./bing_service.js cargo_trips_bos.csv alternate_routes_bos_google.csv 0` 
+ 	  creates the csv file named 'alternate_routes_bos_google.csv' taking 'cargo_trips_bos.csv' as input using the API key at index '0' of the api keys list.
+ 	  The generated alternate_routes have the following fields:
+
+ 	  trip_id, summary, distance, duration, duration_traffic, start_time, provider, avoid_tolls, num_points, original_duration, 
+    original_distance, min_duration_traffic, max_duration_traffic, polyline
+
+ 	  The MapQuest service can be queried in the same way. 
+ 	  For google and MapQuest, varying the departure time yields a wider variety of alternative routes and travel durations.
+
+    Bing, however, seems to give the same routes and durations regardless of the departure time provided in the query, so varying the departure time sent in the query is currently turned off.
+ 	  To turn this back on, uncomment the line beginning with 'queries.push(makeQueryWithTime...'. 
+ 	 
+    Google has 
+
+ 	  After generating all six alternate route csv files (3 each for BOS and SG,) place them all in one directory, say 'routes/' and run the script:
+ 	  `./merge_csv_files.py --input_dir routes --out all_alternate_routes.csv` to merge all the csv files into one named: 'all_alternate_routes.csv'.
+
+  b) Map-matching alternate routes to OSM
+     - First create the Alternate Routes table in the database.
+     To import the alternate routes into the database, execute the python script:
+     `./import_alternate_routes.py --input_file alternate_routes.csv --user root --db fmsurvey --host '127.0.0.1'`
+     You'll be prompted for a password. Enter the password for the fmsurvey database.
+
+     This script creates the alternate_routes table in the fmsurvey database with the schema below, imports the data provided in the alternate_routes.csv file, and creates an index (alternate_route_id_idx) on the id column.
+     (id int(11), trip_id bigint, user_id int(11), summary varchar(255), distance double, duration int, duration_traffic int, start_time datetime, provider varchar(255), avoid_tolls tinyint(1), num_points int(11), original_duration int(11), original_distance double, min_duration_traffic int(11), max_duration_traffic int(11), polyline text, map_matched_polyline text, toll_costs double, overlap double, highest_overlap tinyint(1), toll_crossings_count int(11), h_distance double, road_classification text, speed_classification text, road_distribution text, road_distribution_percent text)
+
+     Note that the fields road_classification, speed_classification, road_distribution, road_distribution_percent are stored in the format hstore which is supported in postgresql but not in mysql so these are converted to json and stored as text. 
+
+     - Once you've added the AlternateRoute table to the db, update the map_matched_segments table to add the column 'alternate_route_id' with the command:
+     > `ALTER TABLE map_matched_segments ADD COLUMN alternate_route_id int(11);`
+
+      you should be able to run map-matching for all alternate routes in the table with the following command:
+     `cd ~/apps/fms-freights && bundle exec rails runner -e staging "AlternateRoute.find(:all).each { |route| Delayed::Job.enqueue RouteMapMatchService.new.execute(route), :queue => 'general' }"`
+     This step should generate MapMatchedSegments for all alternate routes. The expected runtime for this is fairly long (on the order of 2-3 weeks for ~3000 alternative routes)
+
+
+** AlternateRoute model
+** Add alternate_route_id to map_matched_segments, index on it
+** 
+** Tolls - Toll, TollFee, TollPayment, TollCrossing
+** Add Trips (cargo_trips) table
+** Miles to km, segments to MapMatchedSegments
+** do map-matching errors affect overlap calculation?
+
+
+
+
+
+
