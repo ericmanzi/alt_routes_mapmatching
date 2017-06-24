@@ -127,10 +127,10 @@ def main():
 	    else:
 	    	cnx=mysql.connector.connect(user=args.user, host=args.host, database=args.db, password=passwd)
     elif args.adapter == 'psql':
-    	cnx=psycopg2.connect(
-    		"dbname='%s' user='%s' host='%s' password='%s'" % 
-    		(args.db, args.user, args.host, passwd)
-    		)
+		cnx=psycopg2.connect(
+			"dbname='%s' user='%s' host='%s' password='%s'" % 
+			(args.db, args.user, args.host, passwd)
+			)
     else:
     	print("No adapter provided.")
     	return
