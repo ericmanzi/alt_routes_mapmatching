@@ -3,7 +3,7 @@ from __future__ import print_function
 from datetime import datetime
 from prompt_toolkit import AbortAction, prompt
 import sys, csv
-import mysql.connector
+#import mysql.connector
 import psycopg2
 
 '''
@@ -65,14 +65,14 @@ def create_table_mysql():
 def create_table_psql():
 	q = '''
 	CREATE TABLE alternate_routes (id integer, trip_id varchar(20), user_id integer, 
-	summary varchar(255), distance double, duration integer, duration_traffic integer, 
-	start_time datetime, provider varchar(255), avoid_tolls integer, num_intermediate_stops integer,
-	num_points integer, original_duration integer, original_distance double, 
+	summary varchar(255), distance double precision, duration integer, duration_traffic integer, 
+	start_time timestamp, provider varchar(255), avoid_tolls integer, num_intermediate_stops integer,
+	num_points integer, original_duration integer, original_distance double precision, 
 	min_duration_traffic integer, max_duration_traffic integer, polyline text, 
-	map_matched_polyline text, toll_costs double, overlap double, 
-	highest_overlap integer, toll_crossings_count integer, h_distance double, 
-	road_classification text, speed_classification text, road_distribution text, 
-	road_distribution_percent text);
+	map_matched_polyline text, toll_costs double precision, overlap double precision, 
+	highest_overlap integer, toll_crossings_count integer, h_distance double precision, 
+	road_classification hstore, speed_classification hstore, road_distribution hstore, 
+	road_distribution_percent hstore);
 	'''
 	return q	
 
@@ -122,10 +122,11 @@ def main():
 	print(passwd)
 
 	if args.adapter == 'mysql':
-	    if passwd == '':
-	    	cnx=mysql.connector.connect(user=args.user, host=args.host, database=args.db)
-	    else:
-	    	cnx=mysql.connector.connect(user=args.user, host=args.host, database=args.db, password=passwd)
+		pass
+#	    if passwd == '':
+#	    	cnx=mysql.connector.connect(user=args.user, host=args.host, database=args.db)
+#	    else:
+#	    	cnx=mysql.connector.connect(user=args.user, host=args.host, database=args.db, password=passwd)
         elif args.adapter == 'psql':
 	    cnx=psycopg2.connect(
 		"dbname='%s' user='%s' host='%s' password='%s'" % 
