@@ -8,6 +8,7 @@ class RouteMapMatchService
     @route = route
     emulate_readings
     @segments = []
+    initialize_log
     if !@route.nil?
       map_match
       extract_polyline
@@ -21,7 +22,7 @@ class RouteMapMatchService
     # puts "Map Matching alternate route #{@route['id']} (#{@route.try(:summary)}) /#{@route.trip.user_id}/trips/#{@route.trip_id}/alternate_routes/#{@route['id']}"
     indexes = partition_dataset_by_mileage(500.0) # partition_dataset_by_size(500) # partition_dataset_by_mileage(300.0)
     indexes.each do |index|
-      puts "[#{@route['id']}] MapMatching from reading ##{index.first} to reading ##{index.last}..."
+      @log.info "[#{@route['id']}] MapMatching from reading ##{index.first} to reading ##{index.last}..."
       @mm.segments = []
       @mm.data = @readings[index.first..index.last]
       t0 = DateTime.now.to_i
@@ -30,7 +31,7 @@ class RouteMapMatchService
         @mm.mapMatch(@readings[index.first][:latitude], @readings[index.first][:longitude], @readings[index.last][:latitude], @readings[index.last][:longitude], false)
         @segments.concat(@mm.segments)
       end
-      puts "[#{@route['id']}] Finished in #{DateTime.now.to_i - t0} seconds"
+      @log.info "[#{@route['id']}] Finished in #{DateTime.now.to_i - t0} seconds"
     end
   
   
@@ -57,7 +58,7 @@ class RouteMapMatchService
     if @readings.size < n
       indexes << [0, @readings.size-1]
     else
-      puts "Splitting readings into chunks to minimize overhead..."
+      @log.info "Splitting readings into chunks to minimize overhead..."
       start = 0; index = 0
       while((index + n) <= @readings.size)
         index += n
@@ -115,8 +116,8 @@ class RouteMapMatchService
       @readings << reading
       timestamp += get_time_by_distance(points[i], points[i+1]).seconds unless i == (points.size-1)
     end
-    puts "[#{@route['id']}] Dataset Size: #{@readings.size}"
-    puts "[#{@route['id']}] Mileage: #{@route['distance']}"
+    @log.info "[#{@route['id']}] Dataset Size: #{@readings.size}"
+    @log.info "[#{@route['id']}] Mileage: #{@route['distance']}"
   end
   
   def dilute_dataset(points) # Dilute dataset into 2% of the original size
@@ -142,16 +143,16 @@ class RouteMapMatchService
   end
   
   def dilute_dataset_per_distance(points) # Dilute dataset through point distance
-    puts "Original size: #{points.size}"
+    @log.info "Original size: #{points.size}"
     threshold = @route['distance']*0.02
-    puts "Threshold: #{threshold}"
+    @log.info "Threshold: #{threshold}"
     data = [points.first]
     for i in 1..(points.size-1)
       if distance_between(data.last, points[i]) > threshold
         data << points[i]
       end
     end
-    puts "Diluted: #{data.size}"
+    @log.info "Diluted: #{data.size}"
     data
   end
   
@@ -188,6 +189,13 @@ class RouteMapMatchService
     return d # Distance in km
   end
   
+  def initialize_log
+    name = "alt_route_map_match_#{Time.now().strftime("%Y-%m-%d_%H%M")}.log"
+    path = File.join(File.realpath("log"), name)
+    @log = Logger.new(path)
+  end
+
+
 end
 
 
