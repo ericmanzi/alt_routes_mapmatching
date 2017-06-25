@@ -40,11 +40,11 @@ class MapMatcher
 		end
 
 		num = @data.size-1
-        sqlcmd << "VALUES (#{@data.at(0).timestamp.to_time.to_i}, ST_SetSRID(ST_Point(#{initLong.to_f}, #{initLat.to_f}),4326))"
+        sqlcmd << "VALUES (#{@data.at(0)['timestamp'].to_time.to_i}, ST_SetSRID(ST_Point(#{initLong.to_f}, #{initLat.to_f}),4326))"
 		for i in 0..num
 			if i==0
 			else
-				sqlcmd << ", (#{@data.at(i).timestamp.to_time.to_i}, ST_SetSRID(ST_Point(#{@data.at(i).lon.to_f}, #{@data.at(i).lat.to_f}),4326))"
+				sqlcmd << ", (#{@data.at(i)['timestamp'].to_time.to_i}, ST_SetSRID(ST_Point(#{@data.at(i).lon.to_f}, #{@data.at(i).lat.to_f}),4326))"
 			end
 			x = @data.at(i).lon.to_f
 			y = @data.at(i).lat.to_f
@@ -61,7 +61,7 @@ class MapMatcher
 				y2 = y
 			end
 		end
-		sqlcmd << ", (#{@data.at(num).timestamp.to_time.to_i}, ST_SetSRID(ST_Point(#{lastLong.to_f}, #{lastLat.to_f}),4326));"
+		sqlcmd << ", (#{@data.at(num)['timestamp'].to_time.to_i}, ST_SetSRID(ST_Point(#{lastLong.to_f}, #{lastLat.to_f}),4326));"
 
 		# Calculate the segments
 		results = []
