@@ -1,5 +1,5 @@
 class RouteMapMatchService
-  :route, :mm
+  attr_accessor :route, :mm
 
   def initialize
     @mm = MapMatcher.new
