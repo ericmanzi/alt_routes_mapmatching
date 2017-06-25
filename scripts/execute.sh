@@ -1,26 +1,22 @@
-cd /home/freights/apps/alt_routes_mapmatching
+PROJECT_HOME=/home/freights/apps/alt_routes_mapmatching
+cd $PROJECT_HOME
 git pull
 
 START=$1
 END=$2
-echo "Executing map-matching for alternate routes."
 
+# Kill server if running
+if [ -f tmp/pids/server.pid ]; then
+	echo "Killing dev server..."
+	kill -9 $(cat tmp/pids/server.pid)
+fi
+# Start server
+echo "Restarting dev server..."
+rails server -de development
+# Start delayed_job
+echo "Starting delayed job"
+RAILS_ENV=development bin/delayed_job -m start
+
+echo "Executing map-matching for alternate routes."
 rails runner -e development app/jobs/route_map_match_job.rb $START $END
 
-
-#@echo "Preparing $postgres.conf"
-#	@echo "Checking for committed temporary files..."
-#	@if git ls-files | grep -E 'mrtmp|mrinput' > /dev/null; then \
-#		echo "" ; \
-#		echo "OBS! You have committed some large temporary files:" ; \
-#		echo "" ; \
-#		git ls-files | grep -E 'mrtmp|mrinput' | sed 's/^/\t/' ; \
-#		echo "" ; \
-#		exit 1 ; \
-#	fi
-
-#[ df -h ] {
-	echo "-----------STOP!----------"
-	echo "[Error] Segmentation fault: Check Virtualization settings if running on VM."
-	echo "A Networking or Memory error was encountered when running this script"
-#}
