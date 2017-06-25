@@ -6,7 +6,7 @@ class RouteMapMatchService
 
   def execute(route)
     @route = route
-    initialize_log
+    initialize_log(route['id'])
     emulate_readings
     @segments = []
     if !@route.nil?
@@ -108,7 +108,7 @@ class RouteMapMatchService
     # points = Polylines::Decoder.decode_polyline(@route.polyline)
     
     points = Polylines::Decoder.decode_polyline(@route['polyline'])  
-    # points = dilute_dataset_per_distance(points)
+    points = dilute_dataset_per_distance(points)
     points.each_with_index do |p, i|
       # @readings << Reading.new(:latitude => p[0], :longitude => p[1], :timestamp => timestamp)
       # @readings << GpsData.new(:lat => p[0], :lon => p[1], :timestamp => timestamp)
@@ -190,8 +190,8 @@ class RouteMapMatchService
     return d # Distance in km
   end
   
-  def initialize_log
-    name = "alt_route_map_match_#{Time.now().strftime("%Y-%m-%d_%H%M")}.log"
+  def initialize_log(alternate_route_id)
+    name = "#{alternate_route_id}_MM_at_#{Time.now().strftime("%Y-%m-%d_%H%M")}.log"
     path = File.join(File.realpath("log"), name)
     @log = Logger.new(path)
   end
