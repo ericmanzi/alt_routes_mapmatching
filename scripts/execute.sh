@@ -1,10 +1,11 @@
 cd /home/freights/apps/alt_routes_mapmatching
 git pull
+
 START=$1
 END=$2
-echo "Executing map-matching for alternate routes in range $START to $END..."
+echo "Executing map-matching for alternate routes."
 
-./app/jobs/route_map_match_job.rb $START $END
+rails runner -e development app/jobs/route_map_match_job.rb $START $END
 
 
 #@echo "Preparing $postgres.conf"
