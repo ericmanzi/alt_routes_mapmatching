@@ -26,7 +26,8 @@ class RouteMapMatchService
       @mm.data = @readings[index.first..index.last]
       t0 = DateTime.now.to_i
       if !@readings[index.first].nil? and !@readings[index.last].nil?
-        @mm.mapMatch(@readings[index.first].lat, @readings[index.first].lon, @readings[index.last].lat, @readings[index.last].lon, false)
+        # @mm.mapMatch(@readings[index.first].lat, @readings[index.first].lon, @readings[index.last].lat, @readings[index.last].lon, false)
+        @mm.mapMatch(@readings[index.first][:latitude], @readings[index.first][:longitude], @readings[index.last][:latitude], @readings[index.last][:longitude], false)
         @segments.concat(@mm.segments)
       end
       puts "[#{@route['id']}] Finished in #{DateTime.now.to_i - t0} seconds"
@@ -109,9 +110,10 @@ class RouteMapMatchService
     # points = dilute_dataset_per_distance(points)
     points.each_with_index do |p, i|
       # @readings << Reading.new(:latitude => p[0], :longitude => p[1], :timestamp => timestamp)
-      @readings << GpsData.new(:lat => p[0], :lon => p[1], :timestamp => timestamp)
-        @readings << reading
-        timestamp += get_time_by_distance(points[i], points[i+1]).seconds unless i == (points.size-1)
+      # @readings << GpsData.new(:lat => p[0], :lon => p[1], :timestamp => timestamp)
+      reading = {:latitude => p[0], :longitude => p[1], :timestamp => timestamp}
+      @readings << reading
+      timestamp += get_time_by_distance(points[i], points[i+1]).seconds unless i == (points.size-1)
     end
     puts "[#{@route['id']}] Dataset Size: #{@readings.size}"
     puts "[#{@route['id']}] Mileage: #{@route['distance']}"
