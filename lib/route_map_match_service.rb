@@ -159,15 +159,15 @@ class RouteMapMatchService
   
   def extract_polyline
     points = []
-      segments.each do |segment|
-        segment_points = JSON.parse(segment.geom_way)["coordinates"]
-        segment_points.each do |point|
-            points << point.reverse # On geom_way, coordinates are lon/lat, so we need to reverse
-        end
+    @segments.each do |segment|
+      segment_points = JSON.parse(segment.geom_way)["coordinates"]
+      segment_points.each do |point|
+          points << point.reverse # On geom_way, coordinates are lon/lat, so we need to reverse
       end
-      map_matched_polyline = Polylines::Encoder.encode_points(points)
-      sql = "update alternate_routes set map_matched_polyline='#{map_matched_polyline}' where id=#{route['id']}"
-      ActiveRecord::Base.connection.execute sql
+    end
+    map_matched_polyline = Polylines::Encoder.encode_points(points)
+    sql = "update alternate_routes set map_matched_polyline='#{map_matched_polyline}' where id=#{route['id']}"
+    ActiveRecord::Base.connection.execute sql
   end
   
   def distance_between(a, b)
