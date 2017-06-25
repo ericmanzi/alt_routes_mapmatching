@@ -1,3 +1,3 @@
 class GpsData < ActiveRecord::Base
-	attr_accessible :timestamp, :lat, :lon
+	attr_accessor :timestamp, :lat, :lon
 end
