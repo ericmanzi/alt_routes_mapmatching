@@ -6,9 +6,9 @@ class RouteMapMatchService
 
   def execute(route)
     @route = route
+    initialize_log
     emulate_readings
     @segments = []
-    initialize_log
     if !@route.nil?
       map_match
       extract_polyline
