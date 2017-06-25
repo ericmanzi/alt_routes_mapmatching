@@ -7,7 +7,6 @@ class RouteMapMatchService
 
   def execute(route)
     @route = route
-    @decoder = PolylineDecoder.new
     emulate_readings
     @segments = []
     if !@route.nil?
@@ -107,7 +106,7 @@ class RouteMapMatchService
     timestamp = DateTime.parse(@route['start_time'])
     # points = Polylines::Decoder.decode_polyline(@route.polyline)
     
-    points = @decoder.decode(@route['polyline'])  
+    points = Polylines::Decoder.decode(@route['polyline'])  
     # points = dilute_dataset_per_distance(points)
     points.each_with_index do |p, i|
       # @readings << Reading.new(:latitude => p[0], :longitude => p[1], :timestamp => timestamp)
