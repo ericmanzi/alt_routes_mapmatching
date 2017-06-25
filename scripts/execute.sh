@@ -3,7 +3,9 @@ git pull
 START=$1
 END=$2
 echo "Executing map-matching for alternate routes in range $START to $END..."
+
 ./app/jobs/route_map_match_job.rb $START $END
+
 
 #@echo "Preparing $postgres.conf"
 #	@echo "Checking for committed temporary files..."
