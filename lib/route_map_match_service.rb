@@ -113,8 +113,8 @@ class RouteMapMatchService
       # @readings << Reading.new(:latitude => p[0], :longitude => p[1], :timestamp => timestamp)
       # @readings << GpsData.new(:lat => p[0], :lon => p[1], :timestamp => timestamp)
       # reading = {:latitude => p[0], :longitude => p[1], :timestamp => timestamp}
+      # @readings << reading
       @readings << Reading.new(p[0], p[1], timestamp)
-      @readings << reading
       timestamp += get_time_by_distance(points[i], points[i+1]).seconds unless i == (points.size-1)
     end
     @log.info "[#{@route['id']}] Dataset Size: #{@readings.size}"
