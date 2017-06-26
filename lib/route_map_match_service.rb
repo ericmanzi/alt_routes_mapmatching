@@ -97,7 +97,7 @@ class RouteMapMatchService
           distance = 0
         end
       end
-  
+      puts "[indexes.last.last+1, points.size-1]: #{[indexes.last.last+1, points.size-1]}"
       if !indexes.empty? and (indexes.last.last+1) != (points.size-1)
         indexes << [indexes.last.last+1, points.size-1]
       end
