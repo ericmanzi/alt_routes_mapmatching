@@ -83,6 +83,7 @@ class RouteMapMatchService
     indexes = []
     # points = Polylines::Decoder.decode_polyline(@route['polyline'])
     points = @readings
+    puts "@route: #{@route}"
     if @route['distance'] <= m and @route['num_points'] < 400
       indexes << [0, points.size-1]
     else
@@ -96,10 +97,13 @@ class RouteMapMatchService
           start = i+1
           distance = 0
         end
+
       end
-      puts "[indexes.last.last+1, points.size-1]: #{[indexes.last.last+1, points.size-1]}"
       if !indexes.empty? and (indexes.last.last+1) != (points.size-1)
+        puts "[indexes.last.last+1, points.size-1]: #{[indexes.last.last+1, points.size-1]}"
         indexes << [indexes.last.last+1, points.size-1]
+      else
+        indexes << [start, points.size-1]
       end
   
     end
