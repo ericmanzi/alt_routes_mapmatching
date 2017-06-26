@@ -27,6 +27,9 @@ class RouteMapMatchService
       @mm.segments = []
       @mm.data = @readings[index.first..index.last]
       t0 = DateTime.now.to_i
+      puts "@readings: #{@readings}"
+      puts "@readings[index.first]: #{@readings[index.first]}"
+      puts "@readings[index.last]: #{@readings[index.last]}"
       if !@readings[index.first].nil? and !@readings[index.last].nil?
         @log.info "@mapMatch args: #{@readings[index.first].lat}, #{@readings[index.first].lon}, #{@readings[index.last].lat}, #{@readings[index.last].lon}"
         puts "@mapMatch args: #{@readings[index.first].lat}, #{@readings[index.first].lon}, #{@readings[index.last].lat}, #{@readings[index.last].lon}"
