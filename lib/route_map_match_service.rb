@@ -23,6 +23,7 @@ class RouteMapMatchService
     indexes = partition_dataset_by_mileage(500.0) # partition_dataset_by_size(500) # partition_dataset_by_mileage(300.0)
     indexes.each do |index|
       @log.info "[#{@route['id']}] MapMatching from reading ##{index.first} to reading ##{index.last}..."
+      puts "[#{@route['id']}] MapMatching from reading ##{index.first} to reading ##{index.last}..."
       @mm.segments = []
       @mm.data = @readings[index.first..index.last]
       t0 = DateTime.now.to_i
