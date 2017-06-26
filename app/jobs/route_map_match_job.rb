@@ -11,6 +11,6 @@ alternate_routes.each do |alternate_route|
   # Delayed::Job.enqueue RouteMapMatchService.new(alternate_route), :queue => "general"
   puts "Running map-match job for alternate route #{alternate_route['id']}..."
   RouteMapMatchService.new.execute(alternate_route)
-  puts "Map-match job for alternate route #{alternate_route['id']} completed successfully."
+  # puts "Map-match job for alternate route #{alternate_route['id']} completed successfully."
 end
 

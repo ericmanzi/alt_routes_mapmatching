@@ -90,6 +90,7 @@ class RouteMapMatchService
       start = 0
       for i in (1..points.size-1)
         distance += distance_between(points[i-1].coords, points[i].coords)
+        puts "dist: #{distance}"
         if (distance >= m or (i-start) >= 400)
           indexes << [start, i]
           start = i+1
