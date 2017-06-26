@@ -184,10 +184,15 @@ class RouteMapMatchService
     dtor = Math::PI/180
     r = 6378.14#*1000 # Commented out to return distance in km
   
-    rlat1 = a[0].to_f * dtor
-    rlong1 = a[1].to_f * dtor
-    rlat2 = b[0].to_f * dtor
-    rlong2 = b[1].to_f * dtor
+    # rlat1 = a[0].to_f * dtor
+    # rlong1 = a[1].to_f * dtor
+    # rlat2 = b[0].to_f * dtor
+    # rlong2 = b[1].to_f * dtor
+
+    rlat1 = a.lat.to_f * dtor
+    rlong1 = a.lon.to_f * dtor
+    rlat2 = b.lat.to_f * dtor
+    rlong2 = b.lon.to_f * dtor
   
     dlon = rlong1 - rlong2
     dlat = rlat1 - rlat2
