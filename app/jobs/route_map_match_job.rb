@@ -9,8 +9,8 @@ alternate_routes = ActiveRecord::Base.connection.select_all("select * from alter
 
 alternate_routes.each do |alternate_route| 	
   # Delayed::Job.enqueue RouteMapMatchService.new(alternate_route), :queue => "general"
-  "Running map-match job for alternate route #{alternate_route['id']}..."
+  puts "Running map-match job for alternate route #{alternate_route['id']}..."
   RouteMapMatchService.new.execute(alternate_route)
-  "Map-match job for alternate route #{alternate_route['id']} completed successfully."
+  puts "Map-match job for alternate route #{alternate_route['id']} completed successfully."
 end
 

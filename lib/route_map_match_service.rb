@@ -27,8 +27,11 @@ class RouteMapMatchService
       @mm.data = @readings[index.first..index.last]
       t0 = DateTime.now.to_i
       if !@readings[index.first].nil? and !@readings[index.last].nil?
+        @log.info "@mapMatch args: #{@readings[index.first].lat}, #{@readings[index.first].lon}, #{@readings[index.last].lat}, #{@readings[index.last].lon}"
+        puts "@mapMatch args: #{@readings[index.first].lat}, #{@readings[index.first].lon}, #{@readings[index.last].lat}, #{@readings[index.last].lon}"
         @mm.mapMatch(@readings[index.first].lat, @readings[index.first].lon, @readings[index.last].lat, @readings[index.last].lon, false)
         # @mm.mapMatch(@readings[index.first][:latitude], @readings[index.first][:longitude], @readings[index.last][:latitude], @readings[index.last][:longitude], false)
+        puts "@mm.segments: #{@mm.segments}"
         @segments.concat(@mm.segments)
       end
       @log.info "[#{@route['id']}] Finished in #{DateTime.now.to_i - t0} seconds"
