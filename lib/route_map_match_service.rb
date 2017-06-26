@@ -89,7 +89,7 @@ class RouteMapMatchService
       distance = 0
       start = 0
       for i in (1..points.size-1)
-        distance += distance_between(points[i-1], points[i])
+        distance += distance_between(points[i-1].coords, points[i].coords)
         if (distance >= m or (i-start) >= 400)
           indexes << [start, i]
           start = i+1
@@ -184,15 +184,10 @@ class RouteMapMatchService
     dtor = Math::PI/180
     r = 6378.14#*1000 # Commented out to return distance in km
   
-    # rlat1 = a[0].to_f * dtor
-    # rlong1 = a[1].to_f * dtor
-    # rlat2 = b[0].to_f * dtor
-    # rlong2 = b[1].to_f * dtor
-
-    rlat1 = a.lat.to_f * dtor
-    rlong1 = a.lon.to_f * dtor
-    rlat2 = b.lat.to_f * dtor
-    rlong2 = b.lon.to_f * dtor
+    rlat1 = a[0].to_f * dtor
+    rlong1 = a[1].to_f * dtor
+    rlat2 = b[0].to_f * dtor
+    rlong2 = b[1].to_f * dtor
   
     dlon = rlong1 - rlong2
     dlat = rlat1 - rlat2

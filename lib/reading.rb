@@ -5,4 +5,7 @@ class Reading
 		@lon=lon
 		@timestamp=timestamp
 	end
+	def coords
+		return [@lat, @lon]
+	end
 end
