@@ -166,7 +166,7 @@ class RouteMapMatchService
       end
     end
     map_matched_polyline = Polylines::Encoder.encode_points(points)
-    sql = "update alternate_routes set map_matched_polyline='#{map_matched_polyline}' where id=#{route['id']}"
+    sql = "update alternate_routes set map_matched_polyline='#{map_matched_polyline}' where id=#{@route['id']}"
     ActiveRecord::Base.connection.execute sql
   end
   
