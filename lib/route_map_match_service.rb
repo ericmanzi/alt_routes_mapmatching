@@ -20,7 +20,7 @@ class RouteMapMatchService
 
   def map_match
     # puts "Map Matching alternate route #{@route['id']} (#{@route.try(:summary)}) /#{@route.trip.user_id}/trips/#{@route.trip_id}/alternate_routes/#{@route['id']}"
-    indexes = partition_dataset_by_mileage(500.0) # partition_dataset_by_size(500) # partition_dataset_by_mileage(300.0)
+    indexes = partition_dataset_by_mileage(100.0) # partition_dataset_by_size(500) # partition_dataset_by_mileage(300.0)
     puts "indexes: #{indexes}"
     indexes.each do |index|
       puts "index: #{index}"
@@ -29,15 +29,15 @@ class RouteMapMatchService
       @mm.segments = []
       @mm.data = @readings[index.first..index.last]
       t0 = DateTime.now.to_i
-      puts "@readings: #{@readings}"
-      puts "@readings[index.first]: #{@readings[index.first]}"
-      puts "@readings[index.last]: #{@readings[index.last]}"
+      # puts "@readings: #{@readings}"
+      # puts "@readings[index.first]: #{@readings[index.first]}"
+      # puts "@readings[index.last]: #{@readings[index.last]}"
       if !@readings[index.first].nil? and !@readings[index.last].nil?
         @log.info "@mapMatch args: #{@readings[index.first].lat}, #{@readings[index.first].lon}, #{@readings[index.last].lat}, #{@readings[index.last].lon}"
         puts "@mapMatch args: #{@readings[index.first].lat}, #{@readings[index.first].lon}, #{@readings[index.last].lat}, #{@readings[index.last].lon}"
         @mm.mapMatch(@readings[index.first].lat, @readings[index.first].lon, @readings[index.last].lat, @readings[index.last].lon, false)
         # @mm.mapMatch(@readings[index.first][:latitude], @readings[index.first][:longitude], @readings[index.last][:latitude], @readings[index.last][:longitude], false)
-        puts "@mm.segments: #{@mm.segments}"
+        puts "got @mm.segments: #{@mm.segments}"
         @segments.concat(@mm.segments)
       end
       @log.info "[#{@route['id']}] Finished in #{DateTime.now.to_i - t0} seconds"
@@ -83,7 +83,7 @@ class RouteMapMatchService
     indexes = []
     # points = Polylines::Decoder.decode_polyline(@route['polyline'])
     points = @readings
-    puts "@route: #{@route}"
+    # puts "@route: #{@route}"
     if @route['distance'] <= m and @route['num_points'] < 400
       indexes << [0, points.size-1]
     else
@@ -91,7 +91,7 @@ class RouteMapMatchService
       start = 0
       for i in (1..points.size-1)
         distance += distance_between(points[i-1].coords, points[i].coords)
-        puts "dist: #{distance}"
+        # puts "dist: #{distance}"
         if (distance >= m or (i-start) >= 400)
           indexes << [start, i]
           start = i+1
