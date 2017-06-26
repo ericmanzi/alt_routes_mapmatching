@@ -1,7 +1,10 @@
-class RouteMapMatchService < Struct.new(:route)
+class RouteMapMatchService
 
-  def perform
+  def initialize
     @mm = MapMatcher.new
+  end
+    
+  def execute(route)
     @route = route
     initialize_log(route['id'])
     emulate_readings
