@@ -81,7 +81,8 @@ class RouteMapMatchService
   
   def partition_dataset_by_mileage(m)
     indexes = []
-    points = Polylines::Decoder.decode_polyline(@route['polyline'])
+    # points = Polylines::Decoder.decode_polyline(@route['polyline'])
+    points = @readings
     if @route['distance'] <= m and @route['num_points'] < 400
       indexes << [0, points.size-1]
     else
