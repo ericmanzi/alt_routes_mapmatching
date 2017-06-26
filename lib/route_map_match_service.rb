@@ -21,7 +21,9 @@ class RouteMapMatchService
   def map_match
     # puts "Map Matching alternate route #{@route['id']} (#{@route.try(:summary)}) /#{@route.trip.user_id}/trips/#{@route.trip_id}/alternate_routes/#{@route['id']}"
     indexes = partition_dataset_by_mileage(500.0) # partition_dataset_by_size(500) # partition_dataset_by_mileage(300.0)
+    puts "indexes: #{indexes}"
     indexes.each do |index|
+      puts "index: #{index}"
       @log.info "[#{@route['id']}] MapMatching from reading ##{index.first} to reading ##{index.last}..."
       puts "[#{@route['id']}] MapMatching from reading ##{index.first} to reading ##{index.last}..."
       @mm.segments = []
