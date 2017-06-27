@@ -38,26 +38,45 @@ class RouteMapMatchService
         @mm.mapMatch(@readings[index.first].lat, @readings[index.first].lon, @readings[index.last].lat, @readings[index.last].lon, false)
         # @mm.mapMatch(@readings[index.first][:latitude], @readings[index.first][:longitude], @readings[index.last][:latitude], @readings[index.last][:longitude], false)
         puts "got @mm.segments: #{@mm.segments}"
-        @segments.concat(@mm.segments)
+        # @segments.concat(@mm.segments)
+        #------------------ DO INSERT ----------
+        begin
+          segments = []
+          @mm.segments.each_with_index do |s, index|
+                segments.push "('#{s.start_time}', '#{s.end_time}', #{s.edge_id}, #{s.osm_way_id}, '#{s.try(:name).try(:gsub, "'", "")}', #{s.source_id}, #{s.target_id}, '#{s.geom_way}', #{@route['user_id']}, #{index+1}, '#{DateTime.now}', '#{DateTime.now}', #{s.mph*0.621371}, #{s.clazz}, #{s.flags}, #{@route['id']})"
+          end
+          if !segments.join(", ").empty?
+            # @route.segments.delete_all
+            sql = "INSERT INTO map_matched_segments (start_time, end_time, edge_id, osm_way_id, name, source_id, target_id, geom_way, user_id, position, created_at, updated_at, mph, clazz, flags, alternate_route_id) VALUES #{segments.join(", ")};"
+            ActiveRecord::Base.connection.execute sql
+          
+          end
+        rescue Exception => e
+          raise ActiveRecord::Rollback, "[#{@route['id']}] Rolling back segment insertion: #{e}"
+        end
+        # garbage collect segments
+        @mm.data = nil
+        @mm.segments = nil
       end
       @log.info "[#{@route['id']}] Finished in #{DateTime.now.to_i - t0} seconds"
     end
   
   
-    begin
-      segments = []
-      @segments.each_with_index do |s, index|
-            segments.push "('#{s.start_time}', '#{s.end_time}', #{s.edge_id}, #{s.osm_way_id}, '#{s.try(:name).try(:gsub, "'", "")}', #{s.source_id}, #{s.target_id}, '#{s.geom_way}', #{@route['user_id']}, #{index+1}, '#{DateTime.now}', '#{DateTime.now}', #{s.mph*0.621371}, #{s.clazz}, #{s.flags}, #{@route['id']})"
-      end
-      if !segments.join(", ").empty?
-        # @route.segments.delete_all
-        sql = "INSERT INTO map_matched_segments (start_time, end_time, edge_id, osm_way_id, name, source_id, target_id, geom_way, user_id, position, created_at, updated_at, mph, clazz, flags, alternate_route_id) VALUES #{segments.join(", ")};"
-        ActiveRecord::Base.connection.execute sql
+    # begin
+    #   segments = []
+    #   @segments.each_with_index do |s, index|
+    #         segments.push "('#{s.start_time}', '#{s.end_time}', #{s.edge_id}, #{s.osm_way_id}, '#{s.try(:name).try(:gsub, "'", "")}', #{s.source_id}, #{s.target_id}, '#{s.geom_way}', #{@route['user_id']}, #{index+1}, '#{DateTime.now}', '#{DateTime.now}', #{s.mph*0.621371}, #{s.clazz}, #{s.flags}, #{@route['id']})"
+    #   end
+    #   if !segments.join(", ").empty?
+    #     # @route.segments.delete_all
+    #     sql = "INSERT INTO map_matched_segments (start_time, end_time, edge_id, osm_way_id, name, source_id, target_id, geom_way, user_id, position, created_at, updated_at, mph, clazz, flags, alternate_route_id) VALUES #{segments.join(", ")};"
+    #     ActiveRecord::Base.connection.execute sql
   
-      end
-    rescue Exception => e
-      raise ActiveRecord::Rollback, "[#{@route['id']}] Rolling back segment insertion: #{e}"
-    end
+    #   end
+    # rescue Exception => e
+    #   raise ActiveRecord::Rollback, "[#{@route['id']}] Rolling back segment insertion: #{e}"
+    # end
+
   end
   
   
