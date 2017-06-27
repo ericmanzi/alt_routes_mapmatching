@@ -6,16 +6,40 @@ class TripMapMatchService
   end
 
   def execute(device_id, start_time_str, end_time_str)
-    device_id = 25
+
+    def parseDate(datetime_str)
+      sqlDate = datetime_str.in_time_zone('Eastern Time (US & Canada)').to_datetime.utc.to_s(:db)
+    end
+
+    def partition_dataset_by_size(n, dataset)
+      # If route has more than n points, split it in chunks
+      indexes = []
+      if dataset.size < n
+        indexes << [0, dataset.size-1]
+      else
+        start = 0; idx = 0
+        while((idx + n) < dataset.size-1)
+          idx += n
+          indexes << [start, idx]
+          start = idx+1 
+        end
+        indexes << [start, dataset.size-1]
+      end
+      return indexes
+    end
+
+    @mm = MapMatcher.new
+    @segments = []
+
+    device_id = 25 #35
+    device_id = 28 #38
+
     start_time_str = "1475294400"
     end_time_str = "1483160400"
 
     start_time = Time.at(start_time_str.to_i)
     end_time = Time.at(end_time_str.to_i)
 
-    def parseDate(datetime_str)
-      sqlDate = datetime_str.in_time_zone('Eastern Time (US & Canada)').to_datetime.utc.to_s(:db)
-    end
 
     @start_time = parseDate(start_time)
     @end_time = parseDate(end_time)
@@ -42,27 +66,13 @@ class TripMapMatchService
       i+=1
     end
 
-    def partition_dataset_by_size(n, dataset)
-      # If route has more than n points, split it in chunks
-      indexes = []
-      if dataset.size < n
-        indexes << [0, dataset.size-1]
-      else
-        start = 0; idx = 0
-        while((idx + n) < dataset.size-1)
-          idx += n
-          indexes << [start, idx]
-          start = idx+1 
-        end
-        indexes << [start, dataset.size-1]
-      end
-      return indexes
-    end
 
-    trip_indexes.select{|ti| ti[1]-ti[0] > 2}.each do |trip_index|
+    trip_indexes[49..-1].select{|ti| ti[1]-ti[0] > 2}.each do |trip_index|
+    # trip_indexes.select{|ti| ti[1]-ti[0] > 2}.each do |trip_index|
       trip_data = gpsData[trip_index.first..trip_index.last]
 
       puts "trip_data.size: #{trip_data.size}"
+      puts "trip_index: #{trip_index}"
       trip_pts = []
       k = 0
       lastPtIdx = 0
@@ -74,7 +84,7 @@ class TripMapMatchService
         if k==0 or distance_from_lastPt > GPS_PTS_MIN_DIST
           trip_pts << pt
           lastPtIdx = k
-          end
+        end
         k+=1
       end
 
@@ -93,9 +103,9 @@ class TripMapMatchService
           @mm.segments = []
           @mm.data = trip_pts[chunk_index.first..chunk_index.last]
           chunk = trip_pts[chunk_index.first..chunk_index.last]
-          # puts "chunk.size: #{chunk.size}"
+          puts "chunk.size: #{chunk.size}"
           @mm.mapMatch(chunk.first.lat, chunk.first.lon, chunk.last.lat, chunk.last.lon, false)
-          # @segments.concat(@mm.segments)
+          @segments.concat(@mm.segments)
 
           begin
             t0 = parseDate(DateTime.now)
@@ -125,14 +135,14 @@ class TripMapMatchService
     end
 
 
+
+
+
+
+
+
+
   end
-
-
-
-
-
-
-
 
 
 
