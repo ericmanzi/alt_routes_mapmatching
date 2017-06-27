@@ -1,5 +1,6 @@
 class MapMatchedSegment < ActiveRecord::Base
-	attr_accessible :edge_id, :osm_way_id, :end_time, :geom_way, :source_id, :user_id, :start_time, :target_id, :polyline, :name, :position, :mph, :clazz, :flags, :alternate_route_id
+	# attr_accessible :edge_id, :osm_way_id, :end_time, :geom_way, :source_id, :user_id, :start_time, :target_id, :polyline, :name, :position, :mph, :clazz, :flags, :alternate_route_id
+	attr_accessor :edge_id, :osm_way_id, :end_time, :geom_way, :source_id, :user_id, :start_time, :target_id, :polyline, :name, :position, :mph, :clazz, :flags, :alternate_route_id
 	
 	def set_polyline
 	  points = []

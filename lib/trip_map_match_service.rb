@@ -32,7 +32,7 @@
 #     @segments = []
 
 #     # device_id = 25 #35
-#     device_id = 28 #38
+#     device_id = 42 #28 #38
 
 #     start_time_str = "1475294400"
 #     end_time_str = "1483160400"
@@ -139,14 +139,6 @@
 
 
 
-
-
-
 #   end
-
-
-
 # end
-
-
 
