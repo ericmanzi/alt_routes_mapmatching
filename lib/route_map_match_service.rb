@@ -37,7 +37,7 @@ class RouteMapMatchService
         puts "@mapMatch args: #{@readings[index.first].lat}, #{@readings[index.first].lon}, #{@readings[index.last].lat}, #{@readings[index.last].lon}"
         @mm.mapMatch(@readings[index.first].lat, @readings[index.first].lon, @readings[index.last].lat, @readings[index.last].lon, false)
         # @mm.mapMatch(@readings[index.first][:latitude], @readings[index.first][:longitude], @readings[index.last][:latitude], @readings[index.last][:longitude], false)
-        puts "got @mm.segments: #{@mm.segments}"
+        # puts "got @mm.segments: #{@mm.segments}"
         # @segments.concat(@mm.segments)
         #------------------ DO INSERT ----------
         begin
@@ -49,14 +49,17 @@ class RouteMapMatchService
             # @route.segments.delete_all
             sql = "INSERT INTO map_matched_segments (start_time, end_time, edge_id, osm_way_id, name, source_id, target_id, geom_way, user_id, position, created_at, updated_at, mph, clazz, flags, alternate_route_id) VALUES #{segments.join(", ")};"
             ActiveRecord::Base.connection.execute sql
-          
+            
+            MapMatchedSegment.where("polyline = ''").each do |mm_segment|
+              mm_segment.set_polyline
+            end
           end
         rescue Exception => e
           raise ActiveRecord::Rollback, "[#{@route['id']}] Rolling back segment insertion: #{e}"
         end
         # garbage collect segments
-        # @mm.data = nil
-        # @mm.segments = nil
+        @mm.data = nil
+        @mm.segments = nil
       end
       @log.info "[#{@route['id']}] Finished in #{DateTime.now.to_i - t0} seconds"
     end
