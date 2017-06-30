@@ -4,8 +4,8 @@ class MapMatchedSegment < ActiveRecord::Base
 	
 	def set_polyline
 	  points = []
-	  if !self.geom_way.nil?
-	    JSON.parse(self.geom_way)["coordinates"].each do |c|
+	  if !self[:geom_way].nil?
+	    JSON.parse(self[:geom_way])["coordinates"].each do |c|
 	        points << [c[1], c[0]]
 	    end
 	    # self.polyline = GMapPolylineEncoder.new().encode(points)[:points]

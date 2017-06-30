@@ -1,4 +1,4 @@
-require 'json'
+# require 'json'
 
 class RoadClassCalculatorService
 
@@ -44,8 +44,8 @@ class RoadClassCalculatorService
       end
     end
 
-    @route.road_classification = @class_distribution.to_json
-    @route.speed_classification =  @speed_distribution.to_json
+    @route.road_classification = @class_distribution
+    @route.speed_classification =  @speed_distribution
     @route.save
   end
 
