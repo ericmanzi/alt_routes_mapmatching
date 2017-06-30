@@ -61,6 +61,7 @@ class RouteMapMatchService
         @mm.data = nil
         @mm.segments = nil
       end
+      puts "Alternate route [#{@route['id']}] Finished in #{DateTime.now.to_i - t0} seconds"
       @log.info "[#{@route['id']}] Finished in #{DateTime.now.to_i - t0} seconds"
     end
   

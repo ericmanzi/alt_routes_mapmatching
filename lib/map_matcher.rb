@@ -86,7 +86,7 @@ class MapMatcher
 			r["end_time"] = Time.at(r["end_time"].to_i)
 
 			tmp = MapMatchedSegment.new(r)
-			puts tmp.to_json
+			# puts tmp.to_json
 			@segments << tmp
 		end
 
