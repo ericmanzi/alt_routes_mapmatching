@@ -1,4 +1,5 @@
 require 'logger'
+require 'json'
 
 class MapMatcher
 	attr_accessor :data, :segments, :log
@@ -11,9 +12,9 @@ class MapMatcher
 
 	def mapMatch(initLat, initLong, lastLat, lastLong, toll_info)
 		if @data==nil or @data.size==0
-   		@log.warn "findStops: no data provided"
-   		return
-   	end
+   			@log.warn "findStops: no data provided"
+   			return
+   		end
 
 		# When the segments have timestamps, use them to determine the reading we have to start from
 		# (like in stop_detector)

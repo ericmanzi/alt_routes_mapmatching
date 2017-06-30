@@ -42,8 +42,8 @@ class RouteMapMatchService
         #------------------ DO INSERT ----------
         begin
           segments = []
-          @mm.segments.each_with_index do |s, index|
-                segments.push "('#{s.start_time}', '#{s.end_time}', #{s.edge_id}, #{s.osm_way_id}, '#{s.try(:name).try(:gsub, "'", "")}', #{s.source_id}, #{s.target_id}, '#{s.geom_way}', #{@route['user_id']}, #{index+1}, '#{DateTime.now}', '#{DateTime.now}', #{s.mph*0.621371}, #{s.clazz}, #{s.flags}, #{@route['id']})"
+          @mm.segments.each_with_index do |s, seg_index|
+                segments.push "('#{s.start_time}', '#{s.end_time}', #{s.edge_id}, #{s.osm_way_id}, '#{s.try(:name).try(:gsub, "'", "")}', #{s.source_id}, #{s.target_id}, '#{s.geom_way}', #{@route['user_id']}, #{seg_index+1}, '#{DateTime.now}', '#{DateTime.now}', #{s.mph*0.621371}, #{s.clazz}, #{s.flags}, #{@route['id']})"
           end
           if !segments.join(", ").empty?
             # @route.segments.delete_all
@@ -55,8 +55,8 @@ class RouteMapMatchService
           raise ActiveRecord::Rollback, "[#{@route['id']}] Rolling back segment insertion: #{e}"
         end
         # garbage collect segments
-        @mm.data = nil
-        @mm.segments = nil
+        # @mm.data = nil
+        # @mm.segments = nil
       end
       @log.info "[#{@route['id']}] Finished in #{DateTime.now.to_i - t0} seconds"
     end
