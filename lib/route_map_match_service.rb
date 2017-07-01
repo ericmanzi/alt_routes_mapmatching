@@ -20,7 +20,9 @@ class RouteMapMatchService
 
   def map_match
     # puts "Map Matching alternate route #{@route['id']} (#{@route.try(:summary)}) /#{@route.trip.user_id}/trips/#{@route.trip_id}/alternate_routes/#{@route['id']}"
-    indexes = partition_dataset_by_mileage(100.0) # partition_dataset_by_size(500) # partition_dataset_by_mileage(300.0)
+    # indexes = partition_dataset_by_mileage(100.0) # partition_dataset_by_mileage(300.0)
+    indexes = partition_dataset_by_size(20) 
+    
     puts "indexes: #{indexes}"
     indexes.each do |index|
       puts "index: #{index}"
@@ -89,12 +91,12 @@ class RouteMapMatchService
     if @readings.size < n
       indexes << [0, @readings.size-1]
     else
-      @log.info "Splitting readings into chunks to minimize overhead..."
-      start = 0; index = 0
-      while((index + n) <= @readings.size)
-        index += n
-        indexes << [start, index]
-        start = index+1 end
+      # @log.info "Splitting readings into chunks to minimize overhead..."
+      start = 0; idx = 0
+      while((idx + n) <= @readings.size)
+        idx += n
+        indexes << [start, idx]
+        start = idx+1 end
       indexes << [start , @readings.size-1]
     end
     return indexes
