@@ -129,7 +129,7 @@ ActiveRecord::Schema.define(version: 20170625001043) do
   end
 
   create_table "map_matched_segments", id: false, force: :cascade do |t|
-    t.integer "id"
+    t.integer "id",
     t.integer "edge_id"
     t.integer "source_id"
     t.integer "target_id"

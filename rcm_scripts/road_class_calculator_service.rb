@@ -1,5 +1,4 @@
 # require 'json'
-
 class RoadClassCalculatorService
 
 	def initialize(route)
