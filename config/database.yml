@@ -54,13 +54,19 @@ development:
   # Defaults to warning.
   #min_messages: notice
 
-fmsurvey:
-  adapter: mysql2
-  database: fmsurvey
-  username: root
-  password: lsp
-  host: localhost
-  pool: 5
+
+
+
+# fmsurvey:
+#   adapter: mysql2
+#   database: fmsurvey
+#   username: root
+#   password: lsp
+#   host: localhost
+#   pool: 5
+
+
+
 
 
 # Warning: The database defined as "test" will be erased and
