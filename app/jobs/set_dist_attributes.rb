@@ -1,6 +1,6 @@
 # allow bigint for id
 set_id_query = "ALTER TABLE map_matched_segments ALTER COLUMN id TYPE bigint;"
-set_pkey = "ALTER TABLE map_matched_segments ADD PRIMARY_KEY (id);"
+set_pkey = "ALTER TABLE map_matched_segments ADD PRIMARY KEY (id);"
 ActiveRecord::Base.connection.execute set_id_query
 ActiveRecord::Base.connection.execute set_pkey
 
