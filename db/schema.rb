@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20170625001043) do
   enable_extension "hstore"
   enable_extension "pgrouting"
 
-  create_table "alternate_routes", id: false, force: :cascade do |t|
+  create_table "alternate_routes", force: :cascade do |t|
     t.integer "id"
     t.string "trip_id", limit: 20
     t.integer "user_id"
