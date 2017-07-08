@@ -30,7 +30,7 @@ class AlternateRouteInterstateService
 		road_distribution = {}
 		percentages.map{|k, v| road_distribution[k] = (v/100 > THRESHOLD) ? 1 : 0}
 		puts "road_distribution:#{road_distribution}"
-		puts "road_distribution_percent:#{road_distribution_percent}"
+		puts "road_distribution_percent:#{percentages}"
 
 		save_road_dist = "UPDATE alternate_routes SET road_distribution=hstore(ARRAY['#{road_distribution.keys.join("','")}'], ARRAY['#{road_distribution.values.join("','")}']) where id=#{@route[:id]};"
 		save_road_perc = "UPDATE alternate_routes SET road_distribution_percent=hstore(ARRAY['#{percentages.keys.join("','")}'], ARRAY['#{percentages.values.join("','")}']) where id=#{@route[:id]};"
