@@ -16,6 +16,7 @@ class AlternateRouteInterstateService
 
 	def execute
 		total_distance = @route.get_map_matched_mileage
+		puts "total_distance: #{total_distance}"
 		mileages = {}
 		TYPES.keys.map{|t| mileages[t] = 0.0}
 		TYPES.each do |key, value|
