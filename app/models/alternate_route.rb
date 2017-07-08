@@ -15,6 +15,7 @@ class AlternateRoute < ActiveRecord::Base
 		self.segments.each do |segment|
 			distance += segment.length
 		end
-		distance > 0.0 ? distance : mileage
+		# distance > 0.0 ? distance : mileage
+		distance
 	end
 end
