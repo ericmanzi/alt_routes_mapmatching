@@ -1,5 +1,5 @@
 # alternate_routes = ActiveRecord::Base.connection.select_all("select * from alternate_routes;")
-alternate_routes = AlternateRoute.all
+alternate_routes = AlternateRoute.order(:id)
 
 start_idx = ARGV[0].to_i
 end_idx = ARGV[1].to_i
