@@ -45,26 +45,25 @@ class RoadClassCalculatorService
       end
     end
     @segments.each do |segment|
-      puts "segment.mph: #{segment.mph}"
-      puts "segment[:mph]: #{segment[:mph]}"
+      # puts "segment[:mph]: #{segment[:mph]}"
       if !segment[:mph].nil?
-        if segment.mph < 35.0
+        if segment[:mph] < 35.0
           @speed_distribution["Under 35"] += calculate_segment_percentage(segment)
-        elsif segment.mph >= 35.0 and segment.mph < 40.0
+        elsif segment[:mph] >= 35.0 and segment[:mph] < 40.0
           @speed_distribution["35-40"] += calculate_segment_percentage(segment)
-        elsif segment.mph >= 40.0 and segment.mph < 45.0
+        elsif segment[:mph] >= 40.0 and segment[:mph] < 45.0
           @speed_distribution["40-45"] += calculate_segment_percentage(segment)
-        elsif segment.mph >= 45.0 and segment.mph < 50.0
+        elsif segment[:mph] >= 45.0 and segment[:mph] < 50.0
           @speed_distribution["45-50"] += calculate_segment_percentage(segment)
-        elsif segment.mph >= 50.0 and segment.mph < 55.0
+        elsif segment[:mph] >= 50.0 and segment[:mph] < 55.0
           @speed_distribution["50-55"] += calculate_segment_percentage(segment)
-        elsif segment.mph >= 55.0 and segment.mph < 60.0
+        elsif segment[:mph] >= 55.0 and segment[:mph] < 60.0
           @speed_distribution["55-60"] += calculate_segment_percentage(segment)
-        elsif segment.mph >= 60.0 and segment.mph < 65.0
+        elsif segment[:mph] >= 60.0 and segment[:mph] < 65.0
           @speed_distribution["60-65"] += calculate_segment_percentage(segment)
-        elsif segment.mph >= 65.0 and segment.mph < 70.0
+        elsif segment[:mph] >= 65.0 and segment[:mph] < 70.0
           @speed_distribution["65-70"] += calculate_segment_percentage(segment)
-        elsif segment.mph >= 70.0
+        elsif segment[:mph] >= 70.0
           @speed_distribution["Over 70"] += calculate_segment_percentage(segment)
         end
       end
