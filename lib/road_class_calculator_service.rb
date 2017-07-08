@@ -46,7 +46,8 @@ class RoadClassCalculatorService
     end
     @segments.each do |segment|
       puts "segment.mph: #{segment.mph}"
-      if !segment.mph.nil?
+      puts "segment[:mph]: #{segment[:mph]}"
+      if !segment[:mph].nil?
         if segment.mph < 35.0
           @speed_distribution["Under 35"] += calculate_segment_percentage(segment)
         elsif segment.mph >= 35.0 and segment.mph < 40.0
