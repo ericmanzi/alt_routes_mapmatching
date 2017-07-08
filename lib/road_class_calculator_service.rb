@@ -1,33 +1,32 @@
 # require 'json'
 class RoadClassCalculatorService
 
-  @TYPES = {
-    1 => "route.ferry",
-    2 => "route.shuttle_train",
-    3 => "railway.rail",
-    11 => "highway.motorway",
-    12 => "highway.motorway_link",
-    13 => "highway.trunk",
-    14 => "highway.trunk_link",
-    15 => "highway.primary",
-    16 => "highway.primary_link",
-    21 => "highway.secondary",
-    22 => "highway.secondary_link",
-    31 => "highway.tertiary",
-    32 => "highway.residential",
-    41 => "highway.road",
-    42 => "highway.unclassified",
-    51 => "highway.service",
-    62 => "highway.pedestrian",
-    63 => "highway.living_street",
-    71 => "highway.track",
-    72 => "highway.path",
-    81 => "highway.cycleway",
-    91 => "highway.footway",
-    92 => "highway.steps"
-  }
-
   def initialize(route)
+    @TYPES = {
+      1 => "route.ferry",
+      2 => "route.shuttle_train",
+      3 => "railway.rail",
+      11 => "highway.motorway",
+      12 => "highway.motorway_link",
+      13 => "highway.trunk",
+      14 => "highway.trunk_link",
+      15 => "highway.primary",
+      16 => "highway.primary_link",
+      21 => "highway.secondary",
+      22 => "highway.secondary_link",
+      31 => "highway.tertiary",
+      32 => "highway.residential",
+      41 => "highway.road",
+      42 => "highway.unclassified",
+      51 => "highway.service",
+      62 => "highway.pedestrian",
+      63 => "highway.living_street",
+      71 => "highway.track",
+      72 => "highway.path",
+      81 => "highway.cycleway",
+      91 => "highway.footway",
+      92 => "highway.steps"
+    }
     @route = route
     @segment_mileage = {}
     @class_distribution = {}
@@ -38,7 +37,7 @@ class RoadClassCalculatorService
     #  @segments = @route.map_matched_segments
     @segments = MapMatchedSegment.where("alternate_route_id = ?", @route['id'])
     @mileage = calculate_route_mileage
-
+    puts "@segments.size=#{@segments.size}"
     @segments.group_by {|s| @TYPES[s[:clazz]]}.each do |klazz, segments|
       @class_distribution[klazz] = 0.0
       segments.each do |segment|
