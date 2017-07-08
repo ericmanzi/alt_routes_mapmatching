@@ -18,11 +18,12 @@ See https://developers.google.com/maps/documentation/directions/intro for API do
 Dependencies:
 npm install moment
 npm install request
+npm install @google/maps
 chmod +x google_service.js 
 */
 
 // Set to 0 to turn off debug messages.
-DEBUG = 0;
+DEBUG = 1;
 
 // Make sure we got a filename on the command line.
 if (process.argv.length < 5) {

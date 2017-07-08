@@ -51,9 +51,10 @@ from stops s
 	JOIN responses r ON r.response_set_id=rs.id JOIN answers ans ON ans.id=r.answer_id
 	JOIN questions qn ON (ans.question_id=qn.id AND qn.common_identifier='freight_activity')
 	WHERE i.validated=1 and i.deleted = 0 
-	and ans.help_text not in ('Deliver cargo', 'Pick up cargo', 'Start/end my shift, change driver')
-into outfile '/tmp/cargo_stops/other_stops.csv'
-fields terminated by ',' ENCLOSED BY '"' lines terminated by '\n';
+	and qn.text='Fueling - how much?'
+	-- and ans.help_text not in ('Deliver cargo', 'Pick up cargo', 'Start/end my shift, change driver')
+-- into outfile '/tmp/cargo_stops/other_stops.csv'
+-- fields terminated by ',' ENCLOSED BY '"' lines terminated by '\n';
 
 -- -----------------------------------------------------------------------
 -- get all travels

@@ -8,7 +8,10 @@ class MapMatchQuery < ActiveRecord::Base
 		          SELECT e.timestamp, e.dist, #{NETWORK}.id, #{NETWORK}.x1, #{NETWORK}.y1, #{NETWORK}.x2, #{NETWORK}.y2, #{NETWORK}.source, #{NETWORK}.target FROM
 		              (
 		              	SELECT nn_gid AS id, nn_dist as dist, timestamp FROM (
-		                     SELECT  trip.timestamp as timestamp, (pgis_fn_nn(trip.coord, 0.016, 4, 32, '#{NETWORK}', 'true', 'id', 'geom_way')).*
+		                     SELECT  trip.timestamp as timestamp, (pgis_fn_nn(
+		                     trip.coord, 0.016, 4, 32, 
+		                     '#{NETWORK}', 
+		                     'true', 'id', 'geom_way')).*
 		                          FROM trip) AS g1
 					   )
 		               AS e

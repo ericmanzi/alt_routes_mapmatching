@@ -18,7 +18,7 @@ class MapMatchedSegment < ActiveRecord::Base
 	def length
 	  distance = 0.0
 	  begin
-	    points = JSON.parse(self.geom_way)["coordinates"]
+	    points = JSON.parse(self[:geom_way])["coordinates"]
 	    for i in 1..(points.size-1)
 	      distance += distance_between(points[i-1], points[i])
 	    end
@@ -75,6 +75,15 @@ class MapMatchedSegment < ActiveRecord::Base
 	  d = r * c
 
 	  return d # in km, * 0.621371192 to Return the result in Miles...
+	end
+
+
+	def set_cantor_id
+		a = self[:created_at]
+		b = self[:source_id]
+		cantor_pair = ((a+b+1)*(a+b))/2 + b
+		self[:id] = cantor_pair
+		self.save
 	end
 
 end
