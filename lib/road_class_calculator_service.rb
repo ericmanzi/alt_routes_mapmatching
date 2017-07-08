@@ -72,7 +72,9 @@ class RoadClassCalculatorService
 
     @route[:road_classification] = @class_distribution
     @route[:speed_classification] =  @speed_distribution
-    @route.save
+    # @route.save
+    save_q = "UPDATE alternate_routes SET road_classification=#{@route[:road_classification]} where id=#{route[:id]};"
+    save_q = "UPDATE alternate_routes SET speed_classification=#{@route[:speed_classification]} where id=#{route[:id]};"
   end
 
   def calculate_route_mileage
