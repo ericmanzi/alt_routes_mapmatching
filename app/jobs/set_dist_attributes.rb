@@ -6,5 +6,5 @@ end_idx = ARGV[1].to_i
 
 alternate_routes[start_idx..end_idx].each do |alternate_route| 	
   puts "Running road class calculation for alternate route #{alternate_route['id']}"
-  RoadClassCalculatorService.new.execute(alternate_route)
+  RoadClassCalculatorService.new(alternate_route).execute
 end
