@@ -85,7 +85,7 @@ class RoadClassCalculatorService
   end
 
   def calculate_segment_percentage(segment)
-    @segment_mileage[segment[:id]/@mileage
+    @segment_mileage[segment[:id]]/@mileage
   end
 
 end
