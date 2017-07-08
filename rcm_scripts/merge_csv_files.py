@@ -31,7 +31,7 @@ csv_fields = [
 	'provider',
 	'avoid_tolls',
 	'num_intermediate_stops',
-	'num_points',
+	'num_points', 
 	'original_duration',
 	'original_distance',
 	'min_duration_traffic',

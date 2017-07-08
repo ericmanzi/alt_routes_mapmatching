@@ -11,6 +11,13 @@ class MapMatchedSegment < ActiveRecord::Base
 		# puts "points: #{points}"
 	    # self.polyline = GMapPolylineEncoder.new().encode(points)[:points]
 	    self[:polyline] = Polylines::Encoder.encode_points(points)
+	    
+	    if self[:id].nil?
+		    a = self[:created_at]
+			b = self[:source_id]
+	    	self[:id] = cantor_pair(a,b)
+	    end
+	    
 	    self.save
 	  end
 	end
@@ -78,12 +85,8 @@ class MapMatchedSegment < ActiveRecord::Base
 	end
 
 
-	def set_cantor_id
-		a = self[:created_at]
-		b = self[:source_id]
-		cantor_pair = ((a+b+1)*(a+b))/2 + b
-		self[:id] = cantor_pair
-		self.save
+	def cantor_pair(a, b)
+		return ((a+b+1)*(a+b))/2 + b
 	end
 
 end

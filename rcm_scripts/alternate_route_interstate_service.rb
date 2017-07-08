@@ -1,4 +1,4 @@
-require 'json'
+
 class AlternateRouteInterstateService
 	# Calculate route parts which go through routes like I-X, I-X5, I-X10 (e.g.: I-35)
 	# Routes that use I-x5 or I-x10 roads. these are three 1/0 dummy variables. for each route,
@@ -29,7 +29,7 @@ class AlternateRouteInterstateService
 
 		road_distribution = {}
 		percentages.map{|k, v| road_distribution[k] = (v/100 > THRESHOLD) ? 1 : 0}
-		@route.update_attributes(road_distribution: road_distribution.to_json, road_distribution_percent: percentages.to_json)
+		@route.update_attributes(road_distribution: road_distribution, road_distribution_percent: percentages)
 	end
 
 	private

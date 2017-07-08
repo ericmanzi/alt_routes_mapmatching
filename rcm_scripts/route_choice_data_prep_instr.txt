@@ -63,12 +63,12 @@ Route Choice Data Preparation Instructions
 
      Note that the fields road_classification, speed_classification, road_distribution, road_distribution_percent are stored in the format hstore which is supported in postgresql but not in mysql so these are converted to json and stored as text. 
 
-     - Once you've added the AlternateRoute table to the db, update the map_matched_segments table to add the column 'alternate_route_id' with the command:
-     > `ALTER TABLE map_matched_segments ADD COLUMN alternate_route_id int(11);`
+     - If polylines are not set after map-matching a route, follow these steps:
+     $ RAILS_ENV=development rails c
+     > MapMatchedSegment.all.each { |segment| segment.set_polyline }
+     
 
-      you should be able to run map-matching for all alternate routes in the table with the following command:
-     `cd ~/apps/fms-freights && bundle exec rails runner -e staging "AlternateRoute.find(:all).each { |route| Delayed::Job.enqueue RouteMapMatchService.new.execute(route), :queue => 'general' }"`
-     This step should generate MapMatchedSegments for all alternate routes. The expected runtime for this is fairly long (on the order of 2-3 weeks for ~3000 alternative routes)
+
 
 
 ** AlternateRoute model
