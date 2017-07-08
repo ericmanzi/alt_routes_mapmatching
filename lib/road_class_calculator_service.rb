@@ -27,12 +27,12 @@ class RoadClassCalculatorService
     92 => "highway.steps"
   }
 
-	def initialize(route)
-		@route = route
+  def initialize(route)
+    @route = route
     @segment_mileage = {}
     @class_distribution = {}
     @speed_distribution = {"Under 35" => 0.0, "35-40" => 0.0, "40-45" => 0.0, "45-50" => 0.0, "50-55" => 0.0, "55-60" => 0.0, "60-65" => 0.0, "65-70" => 0.0, "Over 70" => 0.0}
-	end
+  end
 
   def execute
     #  @segments = @route.map_matched_segments
@@ -85,7 +85,7 @@ class RoadClassCalculatorService
   end
 
   def calculate_segment_percentage(segment)
-    @segment_mileage[segment[:id]/@mileage
+    @segment_mileage[segment[:id]]/@mileage
   end
 
 end
