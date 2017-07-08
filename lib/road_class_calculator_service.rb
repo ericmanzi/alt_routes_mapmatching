@@ -74,8 +74,8 @@ class RoadClassCalculatorService
     # @route.save
     puts "@class_distribution: #{@class_distribution}"
     puts "@speed_distribution: #{@speed_distribution}"
-    save_q = "UPDATE alternate_routes SET road_classification=#{@route[:road_classification]} where id=#{@route[:id]};"
-    save_q = "UPDATE alternate_routes SET speed_classification=#{@route[:speed_classification]} where id=#{@route[:id]};"
+    save_q = "UPDATE alternate_routes SET road_classification=hstore(#{@route[:road_classification]}) where id=#{@route[:id]};"
+    save_q = "UPDATE alternate_routes SET speed_classification=hstore(#{@route[:speed_classification]}) where id=#{@route[:id]};"
   end
 
   def calculate_route_mileage
