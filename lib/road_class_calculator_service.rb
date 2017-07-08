@@ -73,8 +73,8 @@ class RoadClassCalculatorService
     @route[:speed_classification] =  @speed_distribution
     # @route.save
 
-    save_road = "UPDATE alternate_routes SET road_classification=hstore(#{@route[:road_classification]}) where id=#{@route[:id]};"
-    save_speed = "UPDATE alternate_routes SET speed_classification=hstore(#{@route[:speed_classification]}) where id=#{@route[:id]};"
+    save_road = "UPDATE alternate_routes SET road_classification=hstore(#{@route[:road_classification].keys}, #{@route[:road_classification].values}) where id=#{@route[:id]};"
+    save_speed = "UPDATE alternate_routes SET speed_classification=hstore(#{@route[:speed_classification].keys}, #{@route[:speed_classification].values}) where id=#{@route[:id]};"
 
     ActiveRecord::Base.connection.execute save_road
     ActiveRecord::Base.connection.execute save_speed
