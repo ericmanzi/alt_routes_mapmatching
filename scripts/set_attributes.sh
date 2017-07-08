@@ -14,4 +14,5 @@ fi
 echo "Restarting dev server..."
 rails server -de development
 
+# rails runner -e development app/jobs/set_mm_id.rb
 rails runner -e development app/jobs/set_dist_attributes.rb $START $END
