@@ -37,7 +37,7 @@ class RoadClassCalculatorService
     #  @segments = @route.map_matched_segments
     @segments = MapMatchedSegment.where("alternate_route_id = ?", @route['id'])
     @mileage = calculate_route_mileage
-    puts "@segments.size=#{@segments.size}"
+    # puts "@segments.size=#{@segments.size}"
     @segments.group_by {|s| @TYPES[s[:clazz]]}.each do |klazz, segments|
       @class_distribution[klazz] = 0.0
       segments.each do |segment|
@@ -72,6 +72,8 @@ class RoadClassCalculatorService
     @route[:road_classification] = @class_distribution
     @route[:speed_classification] =  @speed_distribution
     # @route.save
+    puts "@class_distribution: #{@class_distribution}"
+    puts "@speed_distribution: #{@speed_distribution}"
 
     save_road = "UPDATE alternate_routes SET road_classification=hstore(ARRAY['#{@route[:road_classification].keys.join("','")}'], ARRAY['#{@route[:road_classification].values.join("','")}']) where id=#{@route[:id]};"
     save_speed = "UPDATE alternate_routes SET speed_classification=hstore(ARRAY['#{@route[:speed_classification].keys.join("','")}'], ARRAY['#{@route[:speed_classification].values.join("','")}']) where id=#{@route[:id]};"
