@@ -8,3 +8,8 @@ alternate_routes[start_idx..end_idx].each do |alternate_route|
   puts "Running road class calculation for alternate route #{alternate_route['id']}"
   RoadClassCalculatorService.new(alternate_route).execute
 end
+
+alternate_routes[start_idx..end_idx].each do |alternate_route| 	
+  puts "Running route distribution calculation for alternate route #{alternate_route['id']}"
+  AlternateRouteInterstateService.new(alternate_route).execute
+end

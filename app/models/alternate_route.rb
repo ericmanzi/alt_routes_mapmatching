@@ -6,4 +6,15 @@ class AlternateRoute < ActiveRecord::Base
 					:road_distribution, :road_distribution_percent,
 					:user_id
 
+	def segments
+		MapMatchedSegment.where("alternate_route_id = ?", self[:id])
+	end
+
+	def get_map_matched_mileage
+		distance = 0.0
+		self.segments.each do |segment|
+			distance += segment.length
+		end
+		distance > 0.0 ? distance : mileage
+	end
 end
