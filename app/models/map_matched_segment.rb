@@ -13,11 +13,11 @@ class MapMatchedSegment < ActiveRecord::Base
 	    self[:polyline] = Polylines::Encoder.encode_points(points)
 	    
 	    if self[:id].nil?
-		    a = self[:created_at]
+		    a = self[:created_at].to_i
 			b = self[:source_id]
 	    	self[:id] = cantor_pair(a,b)
 	    end
-	    
+
 	    self.save
 	  end
 	end
