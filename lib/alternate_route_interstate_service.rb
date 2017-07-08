@@ -33,7 +33,7 @@ class AlternateRouteInterstateService
 		puts "road_distribution_percent:#{road_distribution_percent}"
 
 		save_road_dist = "UPDATE alternate_routes SET road_distribution=hstore(ARRAY['#{road_distribution.keys.join("','")}'], ARRAY['#{road_distribution.values.join("','")}']) where id=#{@route[:id]};"
-		save_road_perc = "UPDATE alternate_routes SET road_distribution_percent=hstore(ARRAY['#{road_distribution_percent.keys.join("','")}'], ARRAY['#{road_distribution_percent.values.join("','")}']) where id=#{@route[:id]};"
+		save_road_perc = "UPDATE alternate_routes SET road_distribution_percent=hstore(ARRAY['#{percentages.keys.join("','")}'], ARRAY['#{percentages.values.join("','")}']) where id=#{@route[:id]};"
 	
     	ActiveRecord::Base.connection.execute save_road_dist
     	ActiveRecord::Base.connection.execute save_road_perc
