@@ -45,8 +45,8 @@ class RoadClassCalculatorService
         @class_distribution[klazz] += calculate_segment_percentage(segment)
       end
     end
-    puts "segment.mph: #{segment.mph}"
     @segments.each do |segment|
+      puts "segment.mph: #{segment.mph}"
       if !segment.mph.nil?
         if segment.mph < 35.0
           @speed_distribution["Under 35"] += calculate_segment_percentage(segment)
